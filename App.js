@@ -1,96 +1,106 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode'
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  Button,
-  TouchableOpacity,
-} from "react-native";
 
-export default function App() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+import React, { useState, Component } from "react";
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import ProductScreen from './view/Product';
+import HomeScreen from './view/home';
+import RegisterScreen from './view/register';
+import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { TouchableOpacity } from "react-native";
+import Header from './components/UI/Header';
+import { View, TextInput, StyleSheet, Image } from 'react-native';
+import { Searchbar } from 'react-native-paper';
+import { Feather } from '@expo/vector-icons';
+
+
+const Stack = createStackNavigator();
+
+
+function App() {
+
+  const { MongoClient } = require("mongodb");
+// Replace the uri string with your connection string.
+const uri = "mongodb+srv://felipeart:<102203>@stillus.qz0h31r.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri);
+async function run() {
+  try {
+    const database = client.db('sample_mflix');
+    const movies = database.collection('movies');
+    // Query for a movie that has the title 'Back to the Future'
+    const query = { title: 'Back to the Future' };
+    const movie = await movies.findOne(query);
+    console.log(movie);
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);
+
+  const [searchQuery, setSearchQuery] = React.useState('');
+
+  const onChangeSearch = query => setSearchQuery(query);
+
   return (
-    
-    <View style={styles.container}>
-      <Image style={styles.image} source={require("./assets/log.jpeg")} /> 
-      <StatusBar style="auto" />
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email."
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)}
-        /> 
-      </View> 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Senha."
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        /> 
-      </View> 
-      <TouchableOpacity>
-        <Text style={styles.forgot_button}>Esqueçeu a senha?</Text> 
-      </TouchableOpacity> 
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>LOGIN</Text> 
-       
-      </TouchableOpacity> 
-      <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate('Market')}>
-        <Text style={styles.loginText}>CADASTRE-SE</Text> 
-      </TouchableOpacity> 
-    </View> 
-    
+
+
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+
+        />
+        <Stack.Screen name="Product" component={ProductScreen} options={{
+          headerTitle: "",
+          headerRight: () =>
+            <Searchbar
+              placeholder="Search"
+              onChangeText={() => { }}
+
+            />,
+          headerLeft: () =>
+
+            <Image
+              source={require("./assets/log.jpeg")}
+              style={styles.banner}
+
+            />
+
+          ,
+          
+          headerStyle: {
+            height: 150,
+            borderBottonLeftRadius: 50,
+            borderBottonRightRadius: 50,
+            backgroundColor: '#197BF6',
+            shadowColor: '#000',
+            elevation: 25
+          }
+        }} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+
+
+
+
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#197BF6",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    resizeMode: 'center',
-    width: 412,
-    marginTop: -150,
-    marginBottom: -80,
-  },
-  inputView: {
-    backgroundColor: "#fff",
-    borderRadius: 30,
-    width: "70%",
-    height: 45,
-    marginBottom: 20,
-    alignItems: "center",
-  },
-  TextInput: {
-    height: 50,
-    flex: 1,
-    padding: 10,
-    marginLeft: 0,
-  },
-  forgot_button: {
-    height: 30,
-    marginBottom: 30,
-  },
-  loginBtn: {
-    width: "80%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 60,
-    backgroundColor: "#fff",
-  },
-});
+export default () => {
+  return (
+    
 
+    <App />
+
+  )
+}
+
+const styles = StyleSheet.create({
+
+  banner: {
+    resizeMode: 'center',
+    width: 100,
+
+  }
+});

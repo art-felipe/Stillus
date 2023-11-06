@@ -1,8 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode'
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useState, Component } from "react";
+import { AntDesign } from '@expo/vector-icons';
 import {
   StyleSheet,
   Text,
@@ -12,21 +10,28 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-export default function Market({ navigation }) {
+import RegisterScreen from './register';
+import { NativeBaseProvider } from 'native-base';
+
+const HomeScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={require("./assets/log.jpeg")} /> 
+      <NativeBaseProvider><RegisterScreen showModal={showModal} setShowModal={setShowModal} /></NativeBaseProvider>
+
+      <Image style={styles.image} source={require("../assets/log.jpeg")} />
       <StatusBar style="auto" />
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="Deu certo porra."
+          placeholder="Email."
           placeholderTextColor="#003f5c"
           onChangeText={(email) => setEmail(email)}
-        /> 
-      </View> 
+        />
+      </View>
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
@@ -34,18 +39,21 @@ export default function Market({ navigation }) {
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
-        /> 
-      </View> 
+        />
+      </View>
+
+
       <TouchableOpacity>
-        <Text style={styles.forgot_button}>Esqueçeu a senha?</Text> 
-      </TouchableOpacity> 
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>LOGIN</Text> 
-      </TouchableOpacity> 
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>CADASTRE-SE</Text> 
-      </TouchableOpacity> 
-    </View> 
+        <Text style={styles.forgot_button}>Esqueçeu a senha?</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate('Product')}>
+        <Text style={styles.loginText}>LOGIN</Text>
+
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.loginBtn} onPress={() => setShowModal(true)}>
+        <Text style={styles.loginText}>CADASTRE-SE</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -89,3 +97,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
+export default HomeScreen;
