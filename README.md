@@ -16,6 +16,6 @@ EXPO
 
 MongoDB
 
-<video src='[your URL here](https://github.com/art-felipe/Stillus/assets/130235663/2c5e82fe-1fa1-4b7c-9ba0-e4cf0c15e327
-)' width=180/>
+
+https://github.com/art-felipe/Stillus/assets/130235663/1cfdc6ab-d954-42d6-a2c1-534c246a763c
 
